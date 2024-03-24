@@ -6,6 +6,7 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const connection = require('./db')
+const cors = require('koa2-cors')
 
 require('dotenv').config();
 
@@ -25,6 +26,8 @@ app.use(bodyparser({
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
+// cors在路由前面使用
+app.use(cors())
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'
