@@ -1,7 +1,25 @@
+const jwt = require('jsonwebtoken')
+
 const { User } = require('../models')
 const crud = require('./utils')
 
 class UserController {
+  async login(ctx, next) {
+    const { username = '', password = '' } = ctx.request.body
+    let token = jwt.sign({ username, password }, 'secret', {
+      expiresIn: 7 * 24 * 60 * 60,
+      algorithm: 'HS256'
+    })
+    ctx.body = {
+      code: 200,
+      msg: '登录成功',
+      data: {
+        username,
+        token
+      }
+    }
+  }
+
   async add(ctx, next) {
     const { username = '', password = '' } = ctx.request.body
     await crud.add(ctx, User, { username, password })
