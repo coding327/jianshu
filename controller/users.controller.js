@@ -13,7 +13,7 @@ class UserController {
     try {
       const result = await Users.findOne({ username, password })
       if (result) {
-        let token = jwt.sign({ username: result.username, _id: result._id }, 'secret', {
+        let token = jwt.sign({ username: result.username, _id: result._id }, 'jianshu-serve-jwt', {
           expiresIn: 7 * 24 * 60 * 60,
           algorithm: 'HS256'
         })
@@ -77,6 +77,37 @@ class UserController {
       ctx.body = {
         code: 500,
         msg: '注册时出现异常',
+        err
+      }
+    }
+  }
+
+  /**
+   * 用户认证接口
+   */
+  async verify(ctx, next) {
+    const { authorization } = ctx.header
+    const token = authorization.replace('Bearer ', '')
+
+    try {
+      const result = jwt.verify(token, 'jianshu-serve-jwt')
+      const res = await Users.findOne({ _id: result._id })
+      if (res) {
+        ctx.body = {
+          code: 200,
+          msg: '用户认证成功',
+          data: res,
+        }
+      } else {
+        ctx.body = {
+          code: 500,
+          msg: '用户认证失败'
+        }
+      }
+    } catch (err) {
+      ctx.body = {
+        code: 500,
+        msg: '用户认证失败',
         err
       }
     }

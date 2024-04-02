@@ -7,11 +7,12 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const connection = require('./db')
 const cors = require('koa2-cors')
+const koajwt = require('koa-jwt')
 
-require('dotenv').config();
+require('dotenv').config()
 
 // 连接数据库
-connection();
+connection()
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -21,13 +22,18 @@ onerror(app)
 
 // middlewares
 app.use(bodyparser({
-  enableTypes:['json', 'form', 'text']
+  enableTypes: ['json', 'form', 'text']
 }))
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
-// cors在路由前面使用
+// cors，koa-jwt在路由前面使用
 app.use(cors())
+app.use(koajwt({
+  secret: 'jianshu-serve-jwt'
+}).unless({ // unless放行，哪些路由不需要经过jwt验证
+  path: [/^\/users\/login/, /^\/users\/register/]
+}))
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'
@@ -48,6 +54,6 @@ app.use(users.routes(), users.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
-});
+})
 
 module.exports = app
