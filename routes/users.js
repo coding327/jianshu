@@ -1,10 +1,13 @@
 const router = require('koa-router')()
-const { add, update, del, find, findOne, login } = require('../controller/user.controller')
+const { login, register, add, update, del, find, findOne } = require('../controller/users.controller')
 
 router.prefix('/users')
 
 // 登录系统用户
 router.post('/login', login)
+
+// 注册系统用户
+router.post('/register', register)
 
 // 添加系统用户
 router.post('/add', add)
