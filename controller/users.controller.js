@@ -113,6 +113,37 @@ class UserController {
     }
   }
 
+  async updatePassword(ctx, next) {
+    const { username, password } = ctx.request.body
+    try {
+      const result = await Users.updateOne({ username }, { password })
+      console.log(result)
+      if (result.matchedCount === 1 && result.modifiedCount === 1) {
+        ctx.body = {
+          code: 200,
+          msg: '密码修改成功',
+        }
+      } else if (result.matchedCount === 1 && result.modifiedCount === 0) {
+        ctx.body = {
+          code: 300,
+          msg: '密码重复'
+        }
+      } else {
+        ctx.body = {
+          code: 300,
+          msg: '密码修改失败'
+        }
+      }
+    } catch (err) {
+      ctx.body = {
+        code: 500,
+        msg: '修改密码时出现异常',
+        err,
+      }
+    }
+
+  }
+
   async add(ctx, next) {
     const { username = '', password = '' } = ctx.request.body
     await crud.add(ctx, Users, { username, password })
