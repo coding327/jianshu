@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     let year = date.getFullYear()
     let month = date.getMonth() + 1
     let day = date.getDate()
-    let dir = `./public/uploads/${year + month + day}`
+    let dir = `./public/uploads/${year}${month}${day}`
 
     // 判断目录是否存在
     if (!fs.existsSync(dir)) {
