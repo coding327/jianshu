@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 // 上传图片的接口
-// upload.single指定上传单文件的字段名
+// upload.single指定上传单文件的字段名[小写]
 router.post('/', upload.single('myfile'), async (ctx) => {
   if (ctx.file) {
     ctx.body = {

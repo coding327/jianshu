@@ -21,8 +21,8 @@ class UserController {
           code: 200,
           msg: '登录成功',
           data: {
-            username,
-            token
+            token,
+            _id: result._id
           }
         }
       } else {
@@ -86,8 +86,8 @@ class UserController {
    * 用户认证接口
    */
   async verify(ctx, next) {
-    const { authorization } = ctx.header
-    const token = authorization.replace('Bearer ', '')
+    const { Authorization } = ctx.header
+    const token = Authorization.replace('Bearer ', '')
 
     try {
       const result = jwt.verify(token, 'jianshu-serve-jwt')
