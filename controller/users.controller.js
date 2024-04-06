@@ -113,6 +113,9 @@ class UserController {
     }
   }
 
+  /**
+   * 用户密码修改
+   */
   async updatePassword(ctx, next) {
     const { username, password } = ctx.request.body
     try {
@@ -141,7 +144,42 @@ class UserController {
         err,
       }
     }
+  }
 
+  /**
+   * 修改个人信息
+   */
+  async updatePersonal(ctx, next) {
+    const { _id, avatar = '', sex = '', desc = '', phone = '', email = '' } = ctx.request.body
+
+    try {
+      const result = await Users.updateOne({ _id }, {
+        avatar,
+        sex,
+        desc,
+        phone,
+        email
+      })
+      if (result.matchedCount === 1 && result.modifiedCount === 1) {
+        const res = await Users.findOne({ _id })
+        ctx.body = {
+          code: 200,
+          data: res,
+          msg: '个人信息修改成功',
+        }
+      } else {
+        ctx.body = {
+          code: 300,
+          msg: '个人信息修改失败'
+        }
+      }
+    } catch (err) {
+      ctx.body = {
+        code: 500,
+        msg: '修改个人信息时出现异常',
+        err,
+      }
+    }
   }
 
   async add(ctx, next) {
