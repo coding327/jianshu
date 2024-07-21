@@ -44,7 +44,7 @@ router.post('/', upload.single('myfile'), async (ctx) => {
       code: 200,
       msg: '文件上传成功',
       data: {
-        url: `${ctx.origin}/${path.relative('public', ctx.file.path)}` // 返回图片的访问地址[ctx.origin是服务器真实地址，ctx.file.path是图片的存储地址，path.relative是获取两个路径之间的相对路径，replace是替换掉多余的双反斜杠]
+        url: `${ctx.origin}:${process.env.PORT}/${path.relative('public', ctx.file.path)}` // 返回图片的访问地址[ctx.origin是服务器真实地址，ctx.file.path是图片的存储地址，path.relative是获取两个路径之间的相对路径，replace是替换掉多余的双反斜杠]
       }
     }
   } else {
